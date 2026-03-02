@@ -842,6 +842,56 @@ function renderSpecs(item) {
 
 let cachedFilterHTML = null;
 
+/**
+ * Valores QUEMADOS para evitar armar opciones de búsqueda desde INVENTORY.
+ * Si cambia inventory.json (marcas/transmisiones/features nuevos), actualice aquí.
+ */
+const FILTER_VALUES = {
+  makes: [
+    "Ford",
+    "Honda",
+    "Hyundai",
+    "Mitsubishi",
+    "Toyota"
+  ],
+  transmissions: [
+    "Automática 10 velocidades",
+    "Automática 4x4",
+    "Automática 4x4 Low",
+    "Automática caja 5ta 4x4",
+    "Manual 4x4",
+    "Manual 5ta",
+    "Manual 5ta 4x4",
+    "Shiftronic 4x2",
+    "Shiftronic 5ta",
+    "Shiftronic 5ta 4x4",
+    "Shiftronic 5ta 4x4 Low",
+    "Shiftronic 6ta"
+  ],
+  features: [
+    { label: "VENDO", tone: "accent" },
+    { label: "RECIBO", tone: "accent" },
+
+    { label: "4x4", tone: "warn" },
+    { label: "4x4 Low", tone: "warn" },
+    { label: "Bloqueo 4x4", tone: "warn" },
+    { label: "Bloqueo en tracción", tone: "warn" },
+
+    { label: "TRD", tone: "warn" },
+    { label: "Shiftronic 6ta", tone: "warn" },
+    { label: "Shiftronic 4x2", tone: "warn" },
+    { label: "Manual 5ta", tone: "warn" },
+
+    { label: "Para inscribir", tone: "warn" },
+    { label: "Para inscripción", tone: "warn" },
+    { label: "170.000 km", tone: "warn" },
+
+    { label: "Dekra 2026", tone: "good" },
+    { label: "RTV 2026", tone: "good" },
+    { label: "Marchamo 2026", tone: "good" }
+  ]
+};
+
 function chipHTML({ group, value, label = value, tone = null, inputType = "checkbox", name = null }) {
   const id = `${group}-${slugify(value)}`;
   const toneAttr = tone ? ` data-tone="${escapeHTML(tone)}"` : "";
@@ -875,18 +925,13 @@ function buildFilterOptions() {
     .map(o => chipHTML({ group: "sort", value: o.value, label: o.label, inputType: "radio", name: "filterSort" }))
     .join("");
 
-  const makes = uniq(INVENTORY.map(v => v.make)).sort((a, b) => compareText(a, b));
-  const transmissions = uniq(INVENTORY.map(v => v.transmission)).sort((a, b) => compareText(a, b));
+  // QUEMADO: sin recorrer INVENTORY para armar listas
+  const makes = FILTER_VALUES.makes.slice().sort((a, b) => compareText(a, b));
+  const transmissions = FILTER_VALUES.transmissions.slice().sort((a, b) => compareText(a, b));
 
-  const toneMap = new Map();
-  for (const v of INVENTORY) {
-    for (const f of (v.features || [])) {
-      if (!toneMap.has(f.label)) toneMap.set(f.label, f.tone || "accent");
-    }
-  }
-
-  const features = uniq(INVENTORY.flatMap(v => (v.features || []).map(f => f.label)))
-    .sort((a, b) => compareText(a, b));
+  // QUEMADO: features + tone
+  const toneMap = new Map(FILTER_VALUES.features.map(f => [f.label, f.tone || "accent"]));
+  const features = FILTER_VALUES.features.map(f => f.label).slice().sort((a, b) => compareText(a, b));
 
   const makesHTML = makes.map(m => chipHTML({ group: "make", value: m })).join("");
   const transHTML = transmissions.map(t => chipHTML({ group: "trans", value: t })).join("");
