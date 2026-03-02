@@ -1,4 +1,4 @@
-﻿const CONFIG = {
+const CONFIG = {
   locale: "es-CR",
   currency: "CRC",
   whatsappPhoneE164: "50661945512",
@@ -265,7 +265,8 @@ const state = {
   overlay: {
     node: null,
     lastFocus: null,
-    trapHandler: null
+    trapHandler: null,
+    bodyLocked: false
   },
   nav: { active: "home" }
 };
@@ -730,7 +731,17 @@ function showOverlay(node) {
   state.overlay.node = node;
 
   node.classList.remove("is-hidden");
-  lockBodyScroll();
+
+  // En mobile, bloquear body con position:fixed mientras se hace scroll
+  // dentro del modal de filtros puede causar glitches de render.
+  const shouldLockBody = !(isMobile() && node === el.filtersModal);
+  if (shouldLockBody) {
+    lockBodyScroll();
+    state.overlay.bodyLocked = true;
+  } else {
+    state.overlay.bodyLocked = false;
+  }
+
   document.body.classList.add("has-overlay");
 
   node.querySelector("button, a, input, [tabindex]:not([tabindex='-1'])")?.focus?.();
@@ -745,7 +756,8 @@ function hideOverlay(node) {
   state.overlay.trapHandler?.();
   state.overlay.trapHandler = null;
 
-  unlockBodyScroll();
+  if (state.overlay.bodyLocked) unlockBodyScroll();
+  state.overlay.bodyLocked = false;
 
   state.overlay.lastFocus?.focus?.();
   state.overlay.lastFocus = null;
@@ -1501,5 +1513,3 @@ async function init() {
 }
 
 document.addEventListener("DOMContentLoaded", () => { init(); });
-
-
