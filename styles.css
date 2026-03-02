@@ -1130,10 +1130,21 @@ body::before{ content:none; }
     border-left: none;
     border-right: none;
     border-bottom: none;
+    transform: none;
   }
 
   .modal-body{
     padding: 14px 14px 16px 14px;
+    -webkit-overflow-scrolling: auto;
+  }
+
+  /* Estabilidad en mobile: evitar glitches de composición dentro del modal de filtros */
+  #filtersModal .modal-backdrop,
+  #filtersModal .modal-header,
+  #filtersModal .modal-footer,
+  #filtersModal .chip{
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .modal-footer{
