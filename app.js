@@ -9,6 +9,13 @@ const CONFIG = {
     "Hola, me gustaría información sobre el catálogo disponible. ¿Me puede indicar disponibilidad?"
 };
 
+/**
+ * Versión de build para invalidar cache cuando usted publique cambios.
+ * - Cambie este string cada vez que modifique inventory.json
+ * - Si no lo cambia, el navegador usará ETag/304 normalmente (rápido).
+ */
+const BUILD_VERSION = "2026-03-01-1";
+
 const PLACEHOLDER = {
   mobile: (label) => `https://placehold.co/720x1280/png?text=${encodeURIComponent(label)}`,
   desktop: (label) => `https://placehold.co/1600x900/png?text=${encodeURIComponent(label)}`
@@ -205,11 +212,30 @@ let ITEMS_RAW = [];
 let INVENTORY = [];
 let BY_UID = new Map();
 
+/**
+ * Carga inventory.json:
+ * - Usa cache normal (ETag/304) para velocidad.
+ * - Cache bust SOLO por BUILD_VERSION (cuando usted decida).
+ * - Fallback: si falla por cualquier motivo, reintenta con cache: "reload".
+ */
 async function loadItemsFromJson() {
   const url = new URL("./inventory.json", window.location.href);
-  url.searchParams.set("v", String(Date.now()));
+  url.searchParams.set("v", BUILD_VERSION);
 
-  const res = await fetch(url.toString(), { cache: "no-store" });
+  // Intento 1: cache normal (rápido y correcto)
+  let res;
+  try {
+    res = await fetch(url.toString(), { cache: "default" });
+  } catch (e) {
+    // error de red directo, reintento con reload
+    res = null;
+  }
+
+  // Intento 2: fuerza recarga si el intento 1 falló
+  if (!res) {
+    res = await fetch(url.toString(), { cache: "reload" });
+  }
+
   if (!res.ok) throw new Error(`No se pudo cargar inventory.json (${res.status})`);
 
   const data = await res.json();
@@ -218,13 +244,21 @@ async function loadItemsFromJson() {
   return data;
 }
 
+/**
+ * Optimización clave:
+ * - NO construir photos aquí (puede ser miles de objetos).
+ * - Construir fotos LAZY al abrir galería.
+ */
 function hydrateInventory(items) {
   const hydrated = items
     .filter(v => Number(v.vendido) === 0)
     .map(v => {
       const out = { ...v };
       out.type = out.type || "vehiculo";
-      out.photos = buildPhotosFromAssets(out);
+
+      // Lazy: se llena al abrir galería
+      out.photos = null;
+
       out._featureLabels = new Set((out.features || []).map(f => f.label));
       return out;
     });
@@ -373,9 +407,12 @@ function renderCatalog(list) {
   const frag = document.createDocumentFragment();
 
   for (const v of list) {
-    const mainPhoto = v.photos?.[0] ?? {
-      mobile: PLACEHOLDER.mobile(v.title),
-      desktop: PLACEHOLDER.desktop(v.title)
+    // Para el card, no hace falta tener todas las fotos.
+    // Generamos solo la primera ruta, y si falla, placeholder.
+    const firstPhotoPath = `assets/imgs/${v.id}/01.webp`;
+    const mainPhoto = {
+      mobile: firstPhotoPath,
+      desktop: firstPhotoPath
     };
 
     const features = (v.features || []).slice(0, 4);
@@ -447,6 +484,11 @@ function renderCatalog(list) {
 
   el.catalog.innerHTML = "";
   el.catalog.appendChild(frag);
+}
+
+function ensureItemPhotos(item) {
+  if (Array.isArray(item.photos) && item.photos.length) return;
+  item.photos = buildPhotosFromAssets(item);
 }
 
 function buildProgress(item) {
@@ -547,6 +589,9 @@ function setMobileNavActive(key) {
 function openGallery(uid) {
   const v = state.filtered.find(x => x.uid === uid) || BY_UID.get(uid);
   if (!v) return;
+
+  // Lazy build de fotos (optimización grande)
+  ensureItemPhotos(v);
 
   state.activeItem = v;
   state.storyIndex = 0;
@@ -706,6 +751,9 @@ function hideOverlay(node) {
 }
 
 function openFiltersModal() {
+  // Si no hay inventario todavía, no abrir el modal para que no “parezca roto”
+  if (!INVENTORY.length) return;
+
   buildFilterOptions();
   syncFilterInputsFromState();
   showOverlay(el.filtersModal);
@@ -807,6 +855,8 @@ function chipHTML({ group, value, label = value, tone = null, inputType = "check
 }
 
 function buildFilterOptions() {
+  if (!INVENTORY.length) return;
+
   if (cachedFilterHTML) {
     el.filterTypes.innerHTML = cachedFilterHTML.types;
     el.filterSort.innerHTML = cachedFilterHTML.sort;
@@ -1071,7 +1121,7 @@ function bindEvents() {
     });
   }
 
-  el.catalog.addEventListener("click", (e) => {
+  el.catalog?.addEventListener("click", (e) => {
     const wa = e.target.closest?.(".js-wa");
     if (wa) return;
 
@@ -1084,7 +1134,7 @@ function bindEvents() {
     openGallery(uid);
   });
 
-  el.catalog.addEventListener("keydown", (e) => {
+  el.catalog?.addEventListener("keydown", (e) => {
     const card = e.target.closest?.(".card");
     if (!card) return;
     if (e.key === "Enter" || e.key === " ") {
@@ -1094,13 +1144,13 @@ function bindEvents() {
     }
   });
 
-  el.storyStage.addEventListener("pointerdown", onPointerDown);
-  el.storyStage.addEventListener("pointermove", onPointerMove);
-  el.storyStage.addEventListener("pointerup", onPointerUp);
-  el.storyStage.addEventListener("pointercancel", onPointerUp);
-  el.storyStage.addEventListener("wheel", onWheel, { passive: true });
+  el.storyStage?.addEventListener("pointerdown", onPointerDown);
+  el.storyStage?.addEventListener("pointermove", onPointerMove);
+  el.storyStage?.addEventListener("pointerup", onPointerUp);
+  el.storyStage?.addEventListener("pointercancel", onPointerUp);
+  el.storyStage?.addEventListener("wheel", onWheel, { passive: true });
 
-  el.storyStage.addEventListener("click", (e) => {
+  el.storyStage?.addEventListener("click", (e) => {
     if (state.didDrag) {
       e.preventDefault();
       e.stopPropagation();
@@ -1136,8 +1186,20 @@ function bindEvents() {
   }
 }
 
+function setLoadingUI(isLoading) {
+  const disabled = !!isLoading;
+  if (el.btnSearch) el.btnSearch.disabled = disabled;
+  if (el.btnResetFilters) el.btnResetFilters.disabled = disabled;
+
+  // Si quiere, podría poner un spinner/clase en body:
+  // document.body.classList.toggle("is-loading", disabled);
+}
+
 async function init() {
   normalizeUrlToHome();
+
+  // Bloquear UI mientras carga inventario
+  setLoadingUI(true);
 
   try {
     ITEMS_RAW = await loadItemsFromJson();
@@ -1151,9 +1213,11 @@ async function init() {
   }
 
   applyFilters();
-
   setMobileNavActive("home");
   bindEvents();
+
+  // Habilitar UI
+  setLoadingUI(false);
 }
 
 document.addEventListener("DOMContentLoaded", () => { init(); });
