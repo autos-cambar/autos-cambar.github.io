@@ -453,7 +453,7 @@
     "features": [
       { "label": "VENDO", "tone": "accent" },
       { "label": "RECIBO", "tone": "accent" },
-      { "label": "Para inscribir", "tone": "warn" },
+      { "label": "Para inscripción", "tone": "warn" },
       { "label": "Dekra 2026", "tone": "good" },
       { "label": "Marchamo 2026", "tone": "good" }
     ],
@@ -487,7 +487,7 @@
         "Bloqueo de vidrios",
         "Antena en techo"
       ],
-      "notas": ["Para inscribir.", "Se puede recibir menor valor y vuelto."]
+      "notas": ["Para inscripción.", "Se puede recibir menor valor y vuelto."]
     }
   },
   {
@@ -991,12 +991,12 @@
         ["Documentos", "Dekra 2026, Marchamo 2026"]
       ],
       "equipamiento": [
-        "450 HP / 510 lb-ft (según anuncio)",
-        "Suspensión FOX Racing Shox (según anuncio)",
+        "450 HP / 510 lb-ft",
+        "Suspensión FOX Racing Shox",
         "Modos de manejo off-road",
         "Pantalla táctil multimedia (según versión)",
         "Climatizador (según versión)",
-        "Estado como nueva / full extras (según anuncio)"
+        "Estado como nueva / full extras"
       ],
       "notas": [
         "Se recibe casa o propiedad como parte de pago (con vuelto).",
