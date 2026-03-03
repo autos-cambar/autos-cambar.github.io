@@ -1,0 +1,403 @@
+﻿:root {
+  --app-bg: #101318;
+  --app-card-bg: #1a1f26;
+  --app-border: rgba(255, 255, 255, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body.app-body {
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background:
+    radial-gradient(900px 420px at 12% -18%, rgba(255, 193, 7, 0.14), transparent 60%),
+    radial-gradient(900px 420px at 88% -18%, rgba(13, 202, 240, 0.1), transparent 58%),
+    var(--app-bg);
+}
+
+.app-header {
+  position: relative;
+  backdrop-filter: blur(8px);
+  background:
+    linear-gradient(180deg, rgba(8, 11, 16, 0.92), rgba(10, 13, 18, 0.88));
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.app-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  pointer-events: none;
+}
+
+.brand-name {
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.2px;
+}
+
+.brand-sub {
+  font-size: 0.79rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+#brandHome img {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.header-actions .btn {
+  min-height: 2.7rem;
+  font-weight: 600;
+  border-radius: 0.6rem;
+}
+
+#btnSearch {
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+#btnSearch:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+#btnResetFilters {
+  box-shadow: 0 10px 20px rgba(255, 193, 7, 0.2);
+}
+
+#btnResetFilters:hover {
+  box-shadow: 0 12px 24px rgba(255, 193, 7, 0.28);
+}
+
+.app-footer {
+  position: relative;
+  border-top-color: rgba(255, 255, 255, 0.15) !important;
+  background:
+    radial-gradient(900px 220px at 50% 0%, rgba(255, 255, 255, 0.05), transparent 65%),
+    linear-gradient(180deg, rgba(11, 14, 20, 0.96), rgba(8, 10, 15, 0.98));
+}
+
+.app-footer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  pointer-events: none;
+}
+
+.footer-brand {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 500;
+}
+
+.footer-copy {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.catalog-card {
+  background: linear-gradient(180deg, #212833, var(--app-card-bg));
+  border-color: var(--app-border) !important;
+  border-radius: 0.9rem;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.catalog-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34);
+}
+
+.catalog-card:focus-visible {
+  outline: 3px solid rgba(255, 193, 7, 0.45);
+  outline-offset: 2px;
+}
+
+.catalog-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-title-text {
+  line-height: 1.28;
+  min-height: calc(1.28em * 2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-price {
+  font-size: 1.02rem;
+  white-space: nowrap;
+}
+
+.card-meta-line {
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.card-code-line {
+  word-break: break-word;
+}
+
+.active-chip-btn {
+  border-color: rgba(255, 193, 7, 0.45);
+  color: #fff;
+}
+
+.active-chip-btn:hover {
+  border-color: rgba(255, 193, 7, 0.7);
+  background-color: rgba(255, 193, 7, 0.12);
+}
+
+.min-w-0 {
+  min-width: 0;
+}
+
+.gallery-open .modal-backdrop.show {
+  background: linear-gradient(180deg, rgba(38, 44, 52, 0.82), rgba(24, 29, 36, 0.88));
+  opacity: 1;
+}
+
+.modal-gallery .modal-dialog {
+  margin: 0;
+  max-width: none;
+}
+
+.modal-gallery .modal-content {
+  height: 100vh;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(1200px 600px at 50% -20%, rgba(255, 255, 255, 0.1), transparent 65%),
+    rgba(22, 28, 35, 0.78);
+  backdrop-filter: blur(16px) saturate(120%);
+}
+
+.modal-gallery .modal-header,
+.modal-gallery .modal-footer {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  background: rgba(28, 34, 42, 0.74);
+  backdrop-filter: blur(12px);
+}
+
+.gallery-carousel-inner {
+  background: transparent;
+}
+
+.gallery-frame {
+  min-height: calc(100vh - 170px);
+  display: grid;
+  place-items: center;
+  padding: 1.25rem 1.5rem;
+  background:
+    radial-gradient(900px 460px at 50% 50%, rgba(255, 255, 255, 0.08), transparent 72%),
+    linear-gradient(180deg, rgba(68, 76, 88, 0.22), rgba(30, 36, 45, 0.16));
+}
+
+.gallery-image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(94vw, 1700px);
+  max-height: calc(100vh - 210px);
+  margin-inline: auto;
+  border-radius: 0.65rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.gallery-nav-btn {
+  width: 4.2rem;
+  opacity: 1;
+}
+
+.gallery-nav-btn:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.gallery-nav-btn .carousel-control-prev-icon,
+.gallery-nav-btn .carousel-control-next-icon {
+  background-color: rgba(18, 22, 28, 0.56);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  padding: 1.35rem;
+  background-size: 54% 54%;
+}
+
+.gallery-actions .btn {
+  font-weight: 600;
+}
+
+.spec-card {
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.9rem;
+}
+
+.table-dark {
+  --bs-table-bg: transparent;
+  --bs-table-border-color: rgba(255, 255, 255, 0.12);
+}
+
+#specsModal .modal-content {
+  border-radius: 0.8rem;
+}
+
+#specsModal .modal-header {
+  padding: 0.9rem 1rem;
+}
+
+#specsModal #specsTitle {
+  font-size: clamp(1.02rem, 1.1vw + 0.78rem, 1.34rem);
+  line-height: 1.2;
+}
+
+#specsModal #specsSubtitle {
+  font-size: clamp(0.76rem, 0.45vw + 0.64rem, 0.92rem);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+#specsModal .spec-card h3 {
+  font-size: clamp(0.98rem, 0.8vw + 0.72rem, 1.1rem);
+}
+
+#specsModal .table {
+  margin-bottom: 0;
+  font-size: clamp(0.9rem, 0.5vw + 0.76rem, 1rem);
+}
+
+#specsModal .table th,
+#specsModal .table td {
+  padding: 0.45rem 0.35rem;
+  vertical-align: top;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+#specsModal .spec-card ul {
+  font-size: clamp(0.92rem, 0.42vw + 0.78rem, 1rem);
+  line-height: 1.4;
+  margin-bottom: 0;
+}
+
+#specsModal .modal-footer .btn {
+  min-width: 5.2rem;
+}
+
+@media (max-width: 767.98px) {
+  .gallery-actions {
+    width: 100%;
+  }
+
+  .gallery-actions > div {
+    width: 100%;
+  }
+
+  .header-actions {
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  #brandHome {
+    width: 100%;
+  }
+
+  .brand-name {
+    font-size: 1rem;
+  }
+
+  .brand-sub {
+    font-size: 0.74rem;
+  }
+
+  .app-footer {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  .footer-brand,
+  .footer-copy {
+    text-align: center;
+  }
+
+  .gallery-frame {
+    min-height: calc(100vh - 196px);
+    padding: 0.5rem;
+  }
+
+  .gallery-image {
+    max-height: calc(100vh - 230px);
+    max-width: 96vw;
+  }
+
+  #specsModal .modal-dialog {
+    margin: 0.7rem;
+  }
+
+  #specsModal .modal-body {
+    padding: 0.85rem;
+  }
+
+  #specsModal .spec-card {
+    padding: 0.75rem;
+    border-radius: 0.7rem;
+  }
+
+  #specsModal .modal-footer {
+    padding: 0.7rem 0.85rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  #specsModal #specsTitle {
+    font-size: 1rem;
+  }
+
+  #specsModal #specsSubtitle {
+    font-size: 0.8rem;
+  }
+
+  #specsModal .table {
+    font-size: 0.95rem;
+  }
+
+  #specsModal .table th {
+    width: 42%;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.68) !important;
+  }
+
+  #specsModal .table td {
+    width: 58%;
+    font-weight: 600;
+  }
+
+  #specsModal .spec-card ul {
+    padding-left: 1.05rem;
+    font-size: 0.96rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

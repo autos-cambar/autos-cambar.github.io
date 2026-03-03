@@ -1,0 +1,279 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101318" />
+
+  <title>Autos Cambar | Catálogo</title>
+  <meta name="description" content="Catálogo de Autos Cambar. Vehículos y motos disponibles en Costa Rica." />
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+  <link rel="canonical" href="https://autos-cambar.github.io/" />
+
+  <link rel="icon" href="./logo.webp" type="image/webp" />
+  <link rel="apple-touch-icon" href="./logo.webp" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Autos Cambar" />
+  <meta property="og:locale" content="es_CR" />
+  <meta property="og:title" content="Autos Cambar | Catálogo" />
+  <meta property="og:description" content="Vehículos y motos disponibles en Costa Rica." />
+  <meta property="og:url" content="https://autos-cambar.github.io/" />
+  <meta property="og:image" content="https://autos-cambar.github.io/logo.webp" />
+  <meta property="og:image:type" content="image/webp" />
+  <meta property="og:image:alt" content="Logo de Autos Cambar" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Autos Cambar | Catálogo" />
+  <meta name="twitter:description" content="Vehículos y motos disponibles en Costa Rica." />
+  <meta name="twitter:image" content="https://autos-cambar.github.io/logo.webp" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="app-body text-light">
+  <header class="navbar navbar-expand bg-black sticky-top app-header">
+    <div class="container-xl py-2">
+      <div class="header-bar d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100">
+        <button id="brandHome" class="btn btn-link text-decoration-none text-light p-0 d-flex align-items-center gap-2 text-start" type="button" aria-label="Ir al inicio">
+          <img src="./logo.webp" alt="Autos Cambar" width="40" height="40" class="rounded-2 border border-secondary-subtle flex-shrink-0" />
+          <span class="d-grid text-start lh-sm min-w-0">
+            <span class="brand-name text-truncate">Autos Cambar</span>
+            <span class="brand-sub">Catálogo de vehículos</span>
+          </span>
+        </button>
+
+        <div class="header-actions d-grid d-md-flex gap-2 ms-md-auto">
+          <button id="btnSearch" class="btn btn-outline-light btn-sm" type="button">
+            <i class="bi bi-search me-1"></i>Filtros
+          </button>
+          <button id="btnResetFilters" class="btn btn-warning btn-sm text-dark fw-semibold" type="button">
+            <i class="bi bi-arrow-clockwise me-1"></i>Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-xl py-3 py-md-4">
+    <section class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-3">
+      <div>
+        <h1 class="h4 mb-1 fw-bold">Disponibles</h1>
+        <p id="resultsHint" class="text-secondary small mb-2">Cargando catálogo...</p>
+        <div id="activeChips" class="d-flex flex-wrap gap-2"></div>
+      </div>
+
+      <div class="btn-group" role="group" aria-label="Tipo de catálogo">
+        <button id="btnTypeVehiculo" class="btn btn-warning text-dark fw-semibold" type="button">Vehículos</button>
+        <button id="btnTypeMoto" class="btn btn-outline-warning fw-semibold" type="button">Motos</button>
+      </div>
+    </section>
+
+    <section id="catalog" class="row g-3" aria-label="Listado del catálogo"></section>
+  </main>
+
+  <footer class="app-footer bg-black py-5 mt-4">
+    <div class="container-xl d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+      <div class="small footer-brand">Autos Cambar · Catálogo de vehículos y motos</div>
+      <div class="small footer-copy">© <span id="footerYear"></span> Costa Rica</div>
+    </div>
+  </footer>
+
+  <div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content bg-dark text-light border-secondary">
+        <div class="modal-header border-secondary">
+          <h2 id="filtersTitle" class="h5 mb-0">Buscar con filtros</h2>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <form id="filtersForm" class="modal-body">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label small text-secondary mb-1">Tipo</label>
+              <div class="d-flex gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="type" id="typeVehiculo" value="vehiculo" checked />
+                  <label class="form-check-label" for="typeVehiculo">Vehículos</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="type" id="typeMoto" value="moto" />
+                  <label class="form-check-label" for="typeMoto">Motos</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label for="sortSelect" class="form-label small text-secondary mb-1">Orden</label>
+              <select id="sortSelect" name="sort" class="form-select bg-dark text-light border-secondary">
+                <option value="title-asc">Nombre A-Z</option>
+                <option value="title-desc">Nombre Z-A</option>
+                <option value="year-desc">Año más nuevo</option>
+                <option value="year-asc">Año más viejo</option>
+                <option value="price-asc">Precio menor</option>
+                <option value="price-desc">Precio mayor</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small text-secondary mb-1">Marca</label>
+              <div id="filterMakes" class="row g-2"></div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small text-secondary mb-1">Caja</label>
+              <div class="row g-2">
+                <div class="col-6 col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="gearbox" id="gearboxManual" value="manual" />
+                    <label class="form-check-label" for="gearboxManual">Manual</label>
+                  </div>
+                </div>
+                <div class="col-6 col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="gearbox" id="gearboxAutomatica" value="automatica" />
+                    <label class="form-check-label" for="gearboxAutomatica">Automática</label>
+                  </div>
+                </div>
+                <div class="col-6 col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="gearbox" id="gearboxShiftronic" value="shiftronic" />
+                    <label class="form-check-label" for="gearboxShiftronic">Shiftronic</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small text-secondary mb-1">Documentos</label>
+              <div id="filterDocs" class="row g-2"></div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label small text-secondary mb-1">Negocio</label>
+              <div class="row g-2">
+                <div class="col-6 col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="deal" id="dealVendo" value="VENDO" />
+                    <label class="form-check-label" for="dealVendo">Vendo</label>
+                  </div>
+                </div>
+                <div class="col-6 col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="deal" id="dealRecibo" value="RECIBO" />
+                    <label class="form-check-label" for="dealRecibo">Recibo</label>
+                  </div>
+                </div>
+                <div class="col-12 col-md-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="deal" id="dealInscripcion" value="para_inscripcion" />
+                    <label class="form-check-label" for="dealInscripcion">Para inscripción</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label small text-secondary mb-1">Año</label>
+              <div class="row g-2">
+                <div class="col-6">
+                  <input id="yearMin" name="yearMin" type="number" inputmode="numeric" class="form-control bg-dark text-light border-secondary" placeholder="Desde" />
+                </div>
+                <div class="col-6">
+                  <input id="yearMax" name="yearMax" type="number" inputmode="numeric" class="form-control bg-dark text-light border-secondary" placeholder="Hasta" />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label small text-secondary mb-1">Precio CRC</label>
+              <div class="row g-2">
+                <div class="col-6">
+                  <input id="priceMin" name="priceMin" type="number" inputmode="numeric" class="form-control bg-dark text-light border-secondary" placeholder="Mínimo" />
+                </div>
+                <div class="col-6">
+                  <input id="priceMax" name="priceMax" type="number" inputmode="numeric" class="form-control bg-dark text-light border-secondary" placeholder="Máximo" />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="onlyNegotiable" name="onlyNegotiable" />
+                <label class="form-check-label" for="onlyNegotiable">Solo negociables</label>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="modal-footer border-secondary d-flex justify-content-between">
+          <button id="btnResetModal" type="button" class="btn btn-outline-light">
+            <i class="bi bi-arrow-clockwise me-1"></i>Restablecer
+          </button>
+          <button id="btnApplyFilters" type="button" class="btn btn-warning text-dark fw-semibold">
+            <i class="bi bi-funnel me-1"></i>Aplicar <span id="applyCount" class="ms-1">(0)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade modal-gallery" id="galleryModal" tabindex="-1" aria-labelledby="galleryTitle" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content bg-dark text-light border-secondary">
+        <div class="modal-header border-secondary">
+          <div class="me-3 min-w-0">
+            <h2 id="galleryTitle" class="h5 mb-1 text-truncate">Catálogo</h2>
+            <div id="galleryMeta" class="small text-secondary">Foto 1 de 1</div>
+            <div id="gallerySubmeta" class="small text-secondary-emphasis text-truncate"></div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div id="galleryCarousel" class="carousel slide" data-bs-interval="false" data-bs-touch="true" data-bs-wrap="false">
+            <div id="galleryCarouselInner" class="carousel-inner gallery-carousel-inner"></div>
+            <button id="galleryPrev" class="carousel-control-prev gallery-nav-btn" type="button" aria-label="Foto anterior">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button id="galleryNext" class="carousel-control-next gallery-nav-btn" type="button" aria-label="Foto siguiente">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer border-secondary d-flex justify-content-end align-items-stretch align-items-md-center gap-2 gallery-actions">
+          <div class="d-grid d-sm-flex gap-2 ms-md-auto">
+            <a id="galleryWaBtn" class="btn btn-success px-4" href="#" target="_blank" rel="noopener">
+              <i class="bi bi-whatsapp me-1"></i>WhatsApp
+            </a>
+            <button id="gallerySpecsBtn" type="button" class="btn btn-outline-light px-4">
+              <i class="bi bi-card-list me-1"></i>Ficha técnica
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="specsModal" tabindex="-1" aria-labelledby="specsTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content bg-dark text-light border-secondary">
+        <div class="modal-header border-secondary">
+          <div class="min-w-0">
+            <h2 id="specsTitle" class="h5 mb-1 text-truncate">Ficha técnica</h2>
+            <div id="specsSubtitle" class="small text-secondary"></div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div id="specsBody" class="modal-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" defer></script>
+  <script src="./app.js" defer></script>
+</body>
+</html>
